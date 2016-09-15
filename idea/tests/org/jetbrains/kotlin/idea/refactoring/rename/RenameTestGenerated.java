@@ -239,6 +239,12 @@ public class RenameTestGenerated extends AbstractRenameTest {
         doTest(fileName);
     }
 
+    @TestMetadata("objectAlias/objectAlias.test")
+    public void testObjectAlias_ObjectAlias() throws Exception {
+        String fileName = KotlinTestUtils.navigationMetadata("idea/testData/refactoring/rename/objectAlias/objectAlias.test");
+        doTest(fileName);
+    }
+
     @TestMetadata("paramererAsReceiverWithNewNameAsSelector/parameterAsReceiverWithNewNameAsSelector.test")
     public void testParamererAsReceiverWithNewNameAsSelector_ParameterAsReceiverWithNewNameAsSelector() throws Exception {
         String fileName = KotlinTestUtils.navigationMetadata("idea/testData/refactoring/rename/paramererAsReceiverWithNewNameAsSelector/parameterAsReceiverWithNewNameAsSelector.test");

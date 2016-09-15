@@ -1,0 +1,2 @@
+Local variable declaration 8 val a: Alias
+Value read 7 Alias

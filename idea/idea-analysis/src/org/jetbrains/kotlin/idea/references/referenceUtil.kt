@@ -19,7 +19,9 @@ package org.jetbrains.kotlin.idea.references
 import com.intellij.psi.*
 import org.jetbrains.kotlin.asJava.unwrapped
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
+import org.jetbrains.kotlin.descriptors.TypeAliasDescriptor
 import org.jetbrains.kotlin.idea.caches.resolve.analyze
+import org.jetbrains.kotlin.idea.caches.resolve.resolveToDescriptor
 import org.jetbrains.kotlin.idea.imports.canBeReferencedViaImport
 import org.jetbrains.kotlin.idea.intentions.OperatorToFunctionIntention
 import org.jetbrains.kotlin.idea.kdoc.KDocReference
@@ -35,6 +37,7 @@ import org.jetbrains.kotlin.resolve.calls.callUtil.getResolvedCall
 import org.jetbrains.kotlin.resolve.calls.model.isReallySuccess
 import org.jetbrains.kotlin.resolve.descriptorUtil.isExtension
 import org.jetbrains.kotlin.resolve.lazy.BodyResolveMode
+import org.jetbrains.kotlin.resolve.source.getPsi
 import org.jetbrains.kotlin.types.expressions.OperatorConventions
 import org.jetbrains.kotlin.utils.addToStdlib.constant
 import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstance
@@ -88,6 +91,15 @@ fun PsiReference.matchesTarget(candidateTarget: PsiElement): Boolean {
     if (unwrappedCandidate is PsiCompiledElement && targets.any { it.isEquivalentTo(unwrappedCandidate) }) return true
 
     if (this is KtReference) {
+        // TODO: Drop this code when front-end supports separate descriptors for alias-wrapped objects
+        if (unwrappedCandidate is KtTypeAlias) {
+            val expandedAliasTarget: PsiElement? by lazy {
+                (unwrappedCandidate.resolveToDescriptor() as TypeAliasDescriptor).classDescriptor?.source?.getPsi()
+            }
+
+            if (targets.any { it is KtObjectDeclaration && it == expandedAliasTarget }) return true
+        }
+
         return targets.any {
             it.isConstructorOf(unwrappedCandidate)
             || it is KtObjectDeclaration && it.isCompanion() && it.getNonStrictParentOfType<KtClass>() == unwrappedCandidate
