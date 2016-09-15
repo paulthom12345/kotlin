@@ -85,7 +85,9 @@ class ModuleDescriptorImpl @JvmOverloads constructor(
         setDependencies(ModuleDependenciesImpl(descriptors, emptySet()))
     }
 
-    override fun shouldSeeInternalsOf(targetModule: ModuleDescriptor) = targetModule in dependencies!!.modulesWhoseInternalsAreVisible
+    override fun shouldSeeInternalsOf(targetModule: ModuleDescriptor): Boolean {
+        return this == targetModule || targetModule in dependencies!!.modulesWhoseInternalsAreVisible
+    }
 
     private val id: String
         get() = name.toString()
