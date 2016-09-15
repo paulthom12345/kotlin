@@ -158,30 +158,33 @@ fun patchThreadTracker(runnable: RunnableWithException) {
 }
 
 fun patchThreadTracker(runnable: () -> Unit) {
-    if (patched.get()) return
+    fun patch() {
+        if (patched.get()) return
 
-    val commonPoolFactoryName = ForkJoinPool.commonPool().factory.javaClass.name
-    if (commonPoolFactoryName == IdeaForkJoinWorkerThreadFactory::class.java.name) {
-        return
+        val commonPoolFactoryName = ForkJoinPool.commonPool().factory.javaClass.name
+        if (commonPoolFactoryName == IdeaForkJoinWorkerThreadFactory::class.java.name) {
+            return
+        }
+
+        patched.compareAndSet(false, true)
+
+        try {
+            val wellKnownOffendersField = ThreadTracker::class.java.getDeclaredField("wellKnownOffenders")
+            wellKnownOffendersField.isAccessible = true
+
+            @Suppress("UNCHECKED_CAST")
+            val wellKnownOffenders = wellKnownOffendersField.get(null) as MutableSet<String>
+
+            wellKnownOffenders.add("ForkJoinPool.commonPool-worker-")
+        }
+        catch (e: NoSuchFieldException) {
+            println("Patching failed: " + e)
+        }
+        catch (e: IllegalAccessException) {
+            println("Patching failed: " + e)
+        }
     }
 
-    patched.compareAndSet(false, true)
-
-    try {
-        val wellKnownOffendersField = ThreadTracker::class.java.getDeclaredField("wellKnownOffenders")
-        wellKnownOffendersField.isAccessible = true
-
-        @Suppress("UNCHECKED_CAST")
-        val wellKnownOffenders = wellKnownOffendersField.get(null) as MutableSet<String>
-
-        wellKnownOffenders.add("ForkJoinPool.commonPool-worker-")
-    }
-    catch (e: NoSuchFieldException) {
-        println("Patching failed: " + e)
-    }
-    catch (e: IllegalAccessException) {
-        println("Patching failed: " + e)
-    }
-
+    patch()
     runnable()
 }
