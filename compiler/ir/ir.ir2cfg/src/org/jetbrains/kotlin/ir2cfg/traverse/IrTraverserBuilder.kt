@@ -20,10 +20,12 @@ import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.expressions.IrStatementContainer
+import org.jetbrains.kotlin.ir.expressions.IrWhen
 
 fun IrElement.traverser(atStart: Boolean = true): IrTraverser = when(this) {
     is IrFunction -> IrFunctionTraverser(this)
     is IrStatementContainer -> IrContainerTraverser(this, atStart)
+    is IrWhen -> IrWhenTraverser(this, atStart)
     is IrStatement -> IrStatementTraverser(this)
     else -> IrSimpleTraverser()
 }
