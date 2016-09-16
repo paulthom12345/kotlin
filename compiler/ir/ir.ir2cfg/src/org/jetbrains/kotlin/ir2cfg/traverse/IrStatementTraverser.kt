@@ -18,21 +18,19 @@ package org.jetbrains.kotlin.ir2cfg.traverse
 
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.IrStatement
-import org.jetbrains.kotlin.ir.declarations.IrFunction
-import org.jetbrains.kotlin.ir.expressions.IrStatementContainer
 
-fun IrElement.traverser(atStart: Boolean = true): IrTraverser = when(this) {
-    is IrFunction -> IrFunctionTraverser(this)
-    is IrStatementContainer -> IrContainerTraverser(this, atStart)
-    is IrStatement -> IrStatementTraverser(this)
-    else -> IrSimpleTraverser()
+// Does we really need this?
+class IrStatementTraverser(statement: IrStatement) : AbstractIrTraverser() {
+    override val previousElements: List<IrElement>
+        get() = listOf()
+    override val nextElements: List<IrElement>
+        get() = listOf()
+
+    override fun onNext(next: IrElement) {
+        TODO("not implemented")
+    }
+
+    override fun onPrevious(previous: IrElement) {
+        TODO("not implemented")
+    }
 }
-
-fun IrElement.traverserAtStart() = traverser(atStart = true)
-
-fun IrElement.traverserAtEnd() = traverser(atStart = false)
-
-fun IrTraverser?.hasNext(): Boolean = this?.hasNext() ?: false
-
-fun IrTraverser?.hasPrevious(): Boolean = this?.hasPrevious() ?: false
-
