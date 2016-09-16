@@ -20,7 +20,6 @@ import com.intellij.psi.*
 import org.jetbrains.kotlin.java.model.elements.*
 import org.jetbrains.kotlin.java.model.internal.JeElementRegistry
 
-// to extension function?
 fun PsiElement?.toJeElement(registry: JeElementRegistry): JeElement? = when (this) {
     null -> null
     is PsiPackage -> JePackageElement(this, registry)
