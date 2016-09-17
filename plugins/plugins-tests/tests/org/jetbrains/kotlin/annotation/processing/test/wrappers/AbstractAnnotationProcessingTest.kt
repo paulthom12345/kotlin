@@ -51,7 +51,12 @@ abstract class AbstractAnnotationProcessingTest : AbstractBytecodeTextTest() {
 
         val modelFile = File(wholeFile.parent, wholeFile.nameWithoutExtension + ".txt")
         val registry = JeElementRegistry()
-        val jeElement = psiClass.toJeElement(registry) ?: error("JeElement is null")
-        KotlinTestUtils.assertEqualsToFile(modelFile, RENDERER.render(jeElement))
+        try {
+            val jeElement = psiClass.toJeElement(registry) ?: error("JeElement is null")
+            KotlinTestUtils.assertEqualsToFile(modelFile, RENDERER.render(jeElement))
+        }
+        finally {
+            registry.dispose()
+        }
     }
 }
