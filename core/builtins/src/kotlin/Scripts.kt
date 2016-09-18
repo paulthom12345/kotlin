@@ -17,3 +17,5 @@
 package kotlin.script
 
 abstract class StandardScriptTemplate(val args: Array<String>)
+
+abstract class ReplScriptTemplate
