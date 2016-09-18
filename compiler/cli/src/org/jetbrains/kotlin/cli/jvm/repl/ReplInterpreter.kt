@@ -50,6 +50,7 @@ import org.jetbrains.kotlin.script.StandardScriptDefinition
 import java.io.PrintWriter
 import java.net.URLClassLoader
 import kotlin.reflect.KClass
+import kotlin.script.ReplScriptTemplate
 
 class ReplInterpreter(
         disposable: Disposable,
@@ -228,8 +229,6 @@ class ReplInterpreter(
             )
         }
     }
-
-    private abstract class ReplScriptTemplate
 }
 
 sealed class LineResult {

@@ -78,6 +78,7 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
 import kotlin.reflect.KClass
+import kotlin.script.ReplScriptTemplate
 
 private val KOTLIN_SHELL_EXECUTE_ACTION_ID = "KotlinShellExecute"
 
@@ -128,7 +129,7 @@ class KotlinConsoleRunner(
     val executor = CommandExecutor(this)
     var compilerHelper: ConsoleCompilerHelper by Delegates.notNull()
 
-    private val consoleScriptDefinition = object : KotlinScriptDefinitionFromTemplate(ConsoleScriptTemplate::class) {
+    private val consoleScriptDefinition = object : KotlinScriptDefinitionFromTemplate(ReplScriptTemplate::class) {
         override val name = "Kotlin REPL"
         override fun <TF> isScript(file: TF): Boolean {
             val vf = when (file) {
@@ -140,8 +141,6 @@ class KotlinConsoleRunner(
         }
         override fun getScriptName(script: KtScript) = Name.identifier("REPL")
     }
-
-    private abstract class ConsoleScriptTemplate
 
     override fun createProcess() = cmdLine.createProcess()
 
