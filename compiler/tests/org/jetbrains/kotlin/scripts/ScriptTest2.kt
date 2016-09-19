@@ -161,7 +161,7 @@ class ScriptTest2 {
 
     @Test
     fun testSmokeScriptException() {
-        val aClass = compileSmokeTestScript("scriptException/script.kts", ScriptWithArrayParam::class)
+        val aClass = compileScript("smoke_exception.kts", ScriptWithArrayParam::class)
         Assert.assertNotNull(aClass)
         var exceptionThrown = false
         try {
@@ -173,16 +173,6 @@ class ScriptTest2 {
         }
         Assert.assertTrue(exceptionThrown)
     }
-
-    private fun compileSmokeTestScript(
-            scriptPath: String,
-            scriptBase: KClass<out Any>,
-            runIsolated: Boolean = true,
-            suppressOutput: Boolean = false): Class<*>? =
-            compileScriptImpl("compiler/testData/integration/smoke/" + scriptPath,
-                              KotlinScriptDefinitionFromTemplate(scriptBase, null, null, null),
-                              runIsolated,
-                              suppressOutput)
 
     private fun compileScript(
             scriptPath: String,
