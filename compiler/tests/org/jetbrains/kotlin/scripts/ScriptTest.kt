@@ -62,7 +62,7 @@ class ScriptTest : KtUsefulTestCase() {
         Assert.assertNotNull(aClass)
         val anObj = KotlinToJVMBytecodeCompiler.tryConstructClassPub(aClass!!, emptyList())
         Assert.assertNotNull(anObj)
-        val savedClassLoader = URLClassLoader(arrayOf(tmpdir.toURI().toURL()))
+        val savedClassLoader = URLClassLoader(arrayOf(tmpdir.toURI().toURL()), aClass.classLoader)
         val aClassSaved = savedClassLoader.loadClass(aClass.name)
         Assert.assertNotNull(aClassSaved)
         val anObjSaved = KotlinToJVMBytecodeCompiler.tryConstructClassPub(aClassSaved!!, emptyList())
