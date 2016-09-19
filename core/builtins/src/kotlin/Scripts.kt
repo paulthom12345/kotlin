@@ -16,6 +16,12 @@
 
 package kotlin.script
 
+/**
+ * Default script definition template
+ */
 abstract class StandardScriptTemplate(val args: Array<String>)
 
+/**
+ * Script definition template for REPL
+ */
 abstract class ReplScriptTemplate
